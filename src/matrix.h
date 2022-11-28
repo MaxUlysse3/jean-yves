@@ -10,7 +10,14 @@
 
 #include "matrixOperationException.h"
 
-template<typename Type> requires std::convertible_to<Type, double>
+template<typename Type>
+concept canBeInMatrix = requires(Type obj1, Type obj2, std::ostream stream) {
+	{obj1 * obj2} -> std::same_as<Type>;
+	obj1 += obj2;
+	stream << obj1;
+};
+
+template<typename Type> requires canBeInMatrix<Type>
 class Matrix {
 	public:
 		Matrix(int sizeI, int sizeJ) : sizeI(sizeI), sizeJ(sizeJ), size(sizeI * sizeJ) {
@@ -87,7 +94,7 @@ class Matrix {
 		}
 
 		Type* operator [] (int idx) const {
-			return (this->value + idx);
+			return (this->value + (idx * this->sizeJ));
 		}
 
 
@@ -115,20 +122,20 @@ Matrix<Type> operator + (Matrix<Type> const& a, Matrix<Type> const& b) {
 
 template<typename Type>
 Matrix<Type> operator * (Matrix<Type> const& a, Matrix<Type> const& b) {
-	if(b.getSizeI() != a.getSizeJ()) {
+	if(a.getSizeI() != b.getSizeJ()) {
 		MatrixOperationException e;
 		throw(e);
 	}
 
-	Matrix<Type> toReturn(a.getSizeJ(), b.getSizeI());
+	Matrix<Type> toReturn(b.getSizeJ(), a.getSizeI());
 
-	for(auto idx(0) ; idx<a.getSizeI() ; idx++) {
-		for(auto idx2(0) ; idx2<b.getSizeJ() ; idx2++) {
+	for(auto ARow(0) ; ARow<a.getSizeI() ; ARow++) {
+		for(auto BColumn(0) ; BColumn<b.getSizeJ() ; BColumn++) {
 			Type val(0);
-			for(auto idx3(0) ; idx3<a.getSizeJ() ; idx3++) {
-				val += a[idx][idx3] * b[idx2][idx];
+			for(auto i(0) ; i<a.getSizeJ() ; i++) {
+				val += a[ARow][i] * b[BColumn][i];
 			}
-			toReturn[idx][idx2] = val;
+			toReturn[ARow][BColumn] = val;
 		}
 	}
 
