@@ -15,6 +15,7 @@ concept canBeInMatrix = requires(Type obj1, Type obj2, std::ostream stream) {
 	{obj1 * obj2} -> std::same_as<Type>;
 	obj1 += obj2;
 	stream << obj1;
+	obj1 = 0;
 };
 
 template<typename Type> requires canBeInMatrix<Type>
@@ -72,13 +73,16 @@ class Matrix {
 		}
 
 		Matrix<Type>& operator = (Matrix<Type> const& other) {
-			this->sizeI = other.sizeI;
-			this->sizeJ = other.sizeJ;
-			this->size = other.size;
+			if(this->sizeI != other.sizeI || this->sizeJ != other.sizeJ) {
+				MatrixOperationException e;
+				throw(e);
+			}
 
 			for(auto idx(0) ; idx<this->size ; idx++) {
 				this->value[idx] = other.value[idx];
 			}
+
+			return *this;
 		}
 
 		Matrix<Type>& operator += (Matrix<Type> const& other) {
@@ -97,8 +101,6 @@ class Matrix {
 			return (this->value + (idx * this->sizeJ));
 		}
 
-
-
 	protected:
 		const int sizeI;
 		const int sizeJ;
@@ -107,20 +109,20 @@ class Matrix {
 
 };
 
-template<typename Type>
+template<typename Type> requires canBeInMatrix<Type>
 std::ostream& operator << (std::ostream& stream, Matrix<Type> const& a) {
 	stream << a.toString();
 	return stream;
 }
 
-template<typename Type>
+template<typename Type> requires canBeInMatrix<Type>
 Matrix<Type> operator + (Matrix<Type> const& a, Matrix<Type> const& b) {
 	Matrix<Type> toReturn(a);
 	toReturn += b;
 	return toReturn;
 }
 
-template<typename Type>
+template<typename Type> requires canBeInMatrix<Type>
 Matrix<Type> operator * (Matrix<Type> const& a, Matrix<Type> const& b) {
 	if(a.getSizeI() != b.getSizeJ()) {
 		MatrixOperationException e;

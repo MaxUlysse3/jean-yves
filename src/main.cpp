@@ -2,11 +2,12 @@
 #include <string>
 
 #include "matrix.h"
+#include "matrixVector.h"
 
 using namespace std;
 
 int main() {
-	Matrix<int> m(2, 3);
+	Matrix<int> m(2, 2);
 	m[0][0] = 2;
 	m[0][1] = 3;
 
@@ -19,7 +20,12 @@ int main() {
 
 	Matrix<int> f(m);
 
-	cout << m << e << endl;
+	cout << m << endl << e << endl;
 
-	cout << m * e << endl;
+	MatrixVector<int> v(2);
+	
+	v[0] = 2;
+	v[1] = 5;
+
+	cout << v << endl << m * v << endl;
 }
