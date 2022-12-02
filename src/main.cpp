@@ -3,6 +3,7 @@
 
 #include "matrix.h"
 #include "matrixVector.h"
+#include "layer.h"
 
 using namespace std;
 
