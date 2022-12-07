@@ -8,6 +8,7 @@ add_executable(a.out main.cpp)
 target_link_libraries(a.out PUBLIC
 	MatrixOperationException
 	Layer
+	InputLayer
 	)
 
 target_include_directories(a.out PUBLIC
@@ -18,3 +19,8 @@ target_include_directories(a.out PUBLIC
 add_library(MatrixOperationException matrixOperationException.cpp)
 
 add_library(Layer layer.cpp)
+
+add_library(InputLayer inputLayer.cpp)
+target_link_libraries(InputLayer PUBLIC
+	Layer
+	)

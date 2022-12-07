@@ -6,16 +6,18 @@
 
 class Layer {
 	public:
-		Layer(Layer previous);
+		Layer(Layer* previous, int size);
+		~Layer();
 
-		int getSize const;
+		int getSize() const;
+		double getActivation(int index) const;
 	
 	private:
-		MatrixVector<double> activations;
-		Matrix<double> weights;
-		MatrixVector<double> biases;
+		MatrixVector<double>* activations;
+		Matrix<double>* weights;
+		MatrixVector<double>* biases;
 
-		Layer& previous;
+		Layer* previous;
 
 		int size;
 

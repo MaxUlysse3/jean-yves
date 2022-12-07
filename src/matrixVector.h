@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <iterator>
 
 #include "matrix.h"
 
@@ -100,6 +101,49 @@ class MatrixVector {
 			}
 
 			return *this;
+		}
+
+		struct Iterator {
+			public:
+				Iterator(Type* ptr) : ptr(ptr) {}
+
+				Type& operator * () {
+					return *ptr;
+				}
+
+				Type* operator -> () {
+					return ptr;
+				}
+
+				Iterator& operator ++ () {
+					ptr++;
+					return *this;
+				}
+
+				Iterator operator ++ (int) {
+					Iterator copy(*this);
+					++(*this);
+					return copy;
+				}
+
+				friend bool operator == (Iterator const& a, Iterator const& b) {
+					return a.ptr == b.ptr;
+				}
+
+				friend bool operator != (Iterator const& a, Iterator const& b) {
+					return a.ptr != b.ptr;
+				}
+
+			private:
+				Type* ptr;
+		};
+
+		Iterator begin() const {
+			return Iterator(this->value);
+		}
+
+		Iterator end() const {
+			return Iterator(this->value + this->size);
 		}
 	
 	protected:
