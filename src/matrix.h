@@ -72,6 +72,8 @@ class Matrix {
 			return toReturn.str();
 		}
 
+		// Operator overloading
+
 		Matrix<Type>& operator = (Matrix<Type> const& other) {
 			if(this->sizeI != other.sizeI || this->sizeJ != other.sizeJ) {
 				MatrixOperationException e;
@@ -99,6 +101,52 @@ class Matrix {
 
 		Type* operator [] (int idx) const {
 			return (this->value + (idx * this->sizeJ));
+		}
+
+		// Iterator
+
+		struct Iterator {
+			public:
+				Iterator(Type* ptr) : ptr(ptr) {}
+
+				Type& operator * () {
+					return *ptr;
+				}
+
+				Type* operator -> () {
+					return ptr;
+				}
+
+				Iterator& operator ++ () {
+					ptr++;
+					return *this;
+				}
+
+				Iterator operator ++ (int) {
+					Iterator copy(*this);
+					ptr++;
+					return copy;
+				}
+
+				friend bool operator == (Iterator const& a, Iterator const& b) {
+					return a.ptr == b.ptr;
+				}
+
+				friend bool operator != (Iterator const& a, Iterator const& b) {
+					return a.ptr != b.ptr;
+				}
+
+			private:
+				Type* ptr;
+
+		};
+
+		Iterator begin() {
+			return Iterator(this->value);
+		}
+
+		Iterator end() {
+			return Iterator(this->value + this->size);
 		}
 
 	protected:

@@ -9,14 +9,14 @@
 using namespace std;
 
 int main() {
-	MatrixVector<int> a(5);
-	a[3] = 5;
+	Matrix<int> a(5, 4);
+	a[3][2] = 5;
 
 	for(auto i : a) {
 		cout << i << endl;
 	}
 
-	MatrixVector<int>::Iterator z(a.begin());
+	Matrix<int>::Iterator z(a.begin());
 
-	cout << *z << endl;
+	cout << *z << endl << a << endl;
 }
